@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TVB — Daily Wellness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --navy:#0D1B32;
+    --navy-mid:#16294A;
+    --navy-soft:#233A5E;
+    --gold:#C9A24B;
+    --gold-light:#EAD9A6;
+    --ivory:#F6F4ED;
+    --ink:#1B2333;
+    --slate:#6B7280;
+    --line:#E4E0D4;
+    --ok:#3F7A5D;
+    --alert:#B4472D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--ivory);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    color:var(--ink);
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .phone{
+    width:100%;
+    max-width:430px;
+    min-height:100vh;
+    background:var(--ivory);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+
+  /* ---------- HEADER ---------- */
+  header{
+    background:var(--navy);
+    color:#fff;
+    padding:22px 20px 18px;
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+  .brandrow{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:16px;
+  }
+  .crest{
+    width:44px;height:44px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .crest img{
+    width:100%;height:100%;
+    object-fit:contain;
+  }
+  .crest-fallback{
+    width:100%;height:100%;
+    background:var(--gold);
+    border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    color:var(--navy);
+  }
+  .brandtext{line-height:1.1;}
+  .brandtext .club{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:12px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--gold-light);
+  }
+  .brandtext .date{
+    font-size:12px;
+    color:rgba(255,255,255,0.55);
+    margin-top:2px;
+    text-transform:capitalize;
+  }
+  h1{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:28px;
+    letter-spacing:0.3px;
+    margin-bottom:4px;
+  }
+  .subtitle{
+    font-size:13px;
+    color:rgba(255,255,255,0.6);
+  }
+
+  /* net-cord progress bar — signature element */
+  .netcord{
+    margin-top:18px;
+    position:relative;
+    height:14px;
+  }
+  .netcord .rail{
+    position:absolute;
+    top:6px;left:0;right:0;
+    height:2px;
+    background:rgba(255,255,255,0.18);
+  }
+  .netcord .fill{
+    position:absolute;
+    top:6px;left:0;
+    height:2px;
+    background:var(--gold);
+    width:0%;
+    transition:width .35s ease;
+  }
+  .netcord .ball{
+    position:absolute;
+    top:0;
+    width:14px;height:14px;
+    border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 0 4px var(--navy), 0 0 0 5px rgba(201,162,75,0.4);
+    left:0%;
+    transform:translateX(-50%);
+    transition:left .35s ease;
+  }
+  .progresslabel{
+    margin-top:8px;
+    font-size:11px;
+    color:rgba(255,255,255,0.55);
+    letter-spacing:0.5px;
+  }
+  .progresslabel strong{color:var(--gold-light);}
+
+  /* ---------- IDENTITY FIELD ---------- */
+  .identity{
+    padding:18px 20px 4px;
+  }
+  .identity label{
+    display:block;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-bottom:6px;
+  }
+  .identity select{
+    width:100%;
+    border:none;
+    border-bottom:2px solid var(--line);
+    background:transparent;
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    font-weight:600;
+    padding:6px 2px 10px;
+    color:var(--ink);
+    outline:none;
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' fill-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 4px center;
+  }
+  .identity select:focus{border-bottom-color:var(--gold);}
+  .identity select:invalid{color:var(--slate);}
+
+  /* ---------- QUESTION CARDS ---------- */
+  main{
+    padding:8px 20px 140px;
+    flex:1;
+  }
+  .qcard{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:18px 18px 16px;
+    margin-top:14px;
+    transition:border-color .2s ease;
+  }
+  .qcard.needs-comment{
+    border-color:var(--alert);
+  }
+  .qhead{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:14px;
+    gap:10px;
+  }
+  .qtitle{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:17px;
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .qtitle .emoji{font-size:18px;}
+  .qhint{
+    font-size:11px;
+    color:var(--slate);
+    white-space:nowrap;
+  }
+  .scale{
+    display:flex;
+    gap:8px;
+  }
+  .dot{
+    flex:1;
+    aspect-ratio:1/1;
+    border-radius:10px;
+    border:1.5px solid var(--line);
+    background:var(--ivory);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    color:var(--slate);
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .dot:active{transform:scale(0.94);}
+  .dot.selected{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:var(--gold-light);
+  }
+  .dot.selected.low{
+    background:var(--alert);
+    border-color:var(--alert);
+    color:#fff;
+  }
+  .anchors{
+    display:flex;
+    justify-content:space-between;
+    margin-top:8px;
+    font-size:10.5px;
+    color:var(--slate);
+  }
+
+  .note{
+    margin-top:14px;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+  }
+  .note.open{max-height:130px;}
+  .note textarea{
+    width:100%;
+    min-height:60px;
+    border:1.5px solid var(--alert);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:'Inter',sans-serif;
+    font-size:14px;
+    color:var(--ink);
+    resize:none;
+    outline:none;
+  }
+  .note textarea:focus{border-color:var(--gold);}
+  .note label{
+    display:block;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:var(--alert);
+    margin-bottom:8px;
+  }
+  .note label .req{font-weight:400;text-transform:none;letter-spacing:0;color:var(--slate);}
+
+  .optional-note .note label{color:var(--slate);}
+  .optional-note .note textarea{border-color:var(--line);}
+  .optional-note .note textarea:focus{border-color:var(--gold);}
+
+  /* ---------- SUMMARY ---------- */
+  .summary{
+    margin-top:18px;
+    background:var(--navy);
+    border-radius:14px;
+    padding:18px;
+    display:flex;
+    align-items:center;
+    gap:16px;
+    color:#fff;
+  }
+  .summary .score{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:34px;
+    color:var(--gold);
+    line-height:1;
+    min-width:64px;
+  }
+  .summary .score sub{
+    font-size:14px;
+    font-weight:500;
+    color:rgba(255,255,255,0.45);
+  }
+  .summary .label{
+    font-size:12px;
+    color:rgba(255,255,255,0.65);
+    line-height:1.4;
+  }
+  .summary .label strong{
+    display:block;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:14px;
+    color:#fff;
+    font-weight:600;
+    margin-bottom:2px;
+  }
+
+  /* ---------- SUBMIT BAR ---------- */
+  .submitbar{
+    position:fixed;
+    bottom:0;left:0;right:0;
+    display:flex;
+    justify-content:center;
+    background:linear-gradient(to top, var(--ivory) 60%, rgba(246,244,237,0));
+    padding:24px 20px 22px;
+    pointer-events:none;
+  }
+  .submitbar .inner{
+    width:100%;
+    max-width:390px;
+    pointer-events:all;
+  }
+  button.submit{
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:var(--navy);
+    color:#fff;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:0.5px;
+    text-transform:uppercase;
+    cursor:pointer;
+    opacity:0.4;
+    transition:all .2s ease;
+  }
+  button.submit.ready{
+    opacity:1;
+    background:var(--gold);
+    color:var(--navy);
+  }
+  button.submit.ready:active{transform:scale(0.98);}
+  .submithint{
+    text-align:center;
+    font-size:11px;
+    color:var(--slate);
+    margin-top:8px;
+  }
+
+  /* ---------- CONFIRMATION STATE ---------- */
+  .confirm{
+    position:fixed;
+    inset:0;
+    background:var(--navy);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    text-align:center;
+    padding:40px;
+    color:#fff;
+    z-index:50;
+  }
+  .confirm.show{display:flex;}
+  .checkmark{
+    width:64px;height:64px;
+    border-radius:50%;
+    border:2px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:22px;
+  }
+  .confirm h2{
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700;
+    font-size:24px;
+    margin-bottom:8px;
+  }
+  .confirm p{
+    font-size:13px;
+    color:rgba(255,255,255,0.6);
+    max-width:260px;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+<div class="phone">
+
+  <header>
+    <div class="brandrow">
+      <div class="crest" id="crestWrap"><img src="logo.png" alt="Tours Volley-Ball" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'crest-fallback',textContent:'TVB'}))"></div>
+      <div class="brandtext">
+        <div class="club">Tours Volley-Ball</div>
+        <div class="date" id="today"></div>
+      </div>
+    </div>
+    <h1>Daily Wellness</h1>
+    <div class="subtitle">Every training day, 1 hour before training</div>
+    <div class="netcord">
+      <div class="rail"></div>
+      <div class="fill" id="fill"></div>
+      <div class="ball" id="ball"></div>
+    </div>
+    <div class="progresslabel"><strong id="progcount">0/6</strong> questions answered</div>
+  </header>
+
+  <div class="identity">
+    <label>Player</label>
+    <select id="playername" required>
+      <option value="" disabled selected>Select your name</option>
+      <option>Dias</option>
+      <option>Urchevich</option>
+      <option>Molotkov</option>
+      <option>Olsen</option>
+      <option>Kavogo</option>
+      <option>Ngapeth</option>
+      <option>Cardoso</option>
+      <option>Scherer</option>
+      <option>Santos</option>
+      <option>Roehrig</option>
+      <option>Huetz</option>
+      <option>Huard</option>
+      <option>Ramon</option>
+      <option>Folgalvez</option>
+    </select>
+  </div>
+
+  <main>
+
+    <div class="qcard" data-q="sleep" data-label="Sleep">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">😴</span>Sleep</div>
+        <div class="qhint">last night</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Very poor</span><span>Excellent</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard" data-q="energy" data-label="Energy">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">🔋</span>Energy</div>
+        <div class="qhint">current level</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Empty</span><span>Full tank</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard" data-q="lowerbody" data-label="Lower body">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">🦵</span>Lower body</div>
+        <div class="qhint">soreness / heaviness</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Very sore</span><span>None</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard" data-q="upperbody" data-label="Upper body">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">💪</span>Upper body</div>
+        <div class="qhint">soreness / heaviness</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Very sore</span><span>None</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard" data-q="moodmotiv" data-label="Mood-motivation">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">😊</span>Mood-motiv.</div>
+        <div class="qhint">drive to train</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Low</span><span>Excellent</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard" data-q="nutritionhydra" data-label="Nutrition-hydration">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">🍎</span>Nutrition-hydra.</div>
+        <div class="qhint">quality today</div>
+      </div>
+      <div class="scale"></div>
+      <div class="anchors"><span>Poor</span><span>Excellent</span></div>
+      <div class="note"><label>Comment <span class="req">required (score ≤ 2)</span></label><textarea placeholder="Add details..."></textarea></div>
+    </div>
+
+    <div class="qcard optional-note">
+      <div class="qhead">
+        <div class="qtitle"><span class="emoji">📝</span>Anything else?</div>
+        <div class="qhint">optional</div>
+      </div>
+      <div class="note open"><label>Comment <span class="req">optional</span></label><textarea id="freecomment" placeholder="Anything you'd like the staff to know..."></textarea></div>
+    </div>
+
+    <div class="summary">
+      <div class="score" id="scoretotal">–<sub>/30</sub></div>
+      <div class="label"><strong>Today's score</strong>Updates live as you answer</div>
+    </div>
+
+  </main>
+
+  <div class="submitbar">
+    <div class="inner">
+      <button class="submit" id="submitbtn">Submit</button>
+      <div class="submithint">Only visible to the performance staff</div>
+    </div>
+  </div>
+
+  <div class="confirm" id="confirm">
+    <div class="checkmark">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+        <path d="M4 12L9.5 17.5L20 6" stroke="#C9A24B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>Wellness submitted</h2>
+    <p>Thanks — see you on court.</p>
+  </div>
+
+</div>
+
+<script>
+  // === TVB Supabase config ===================================
+  // Replace these two lines with your actual Project URL and anon/public
+  // key (Supabase dashboard → Settings → API), then this form writes
+  // straight into the wellness_checkins table.
+  const SUPABASE_URL = 'https://tfzigvptuftkfvbvzqgl.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_zhe8JDOzg6IIMfd_5_g0pA_7W-GvOHO';
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // =============================================================
+
+  const questions = ['sleep','energy','lowerbody','upperbody','moodmotiv','nutritionhydra'];
+  // maps the on-page question keys to the wellness_checkins column names
+  const dbColumns = {
+    sleep: 'sleep',
+    energy: 'energy',
+    lowerbody: 'lower_body',
+    upperbody: 'upper_body',
+    moodmotiv: 'mood_motivation',
+    nutritionhydra: 'nutrition_hydration'
+  };
+  const answers = {};
+
+  const today = new Date();
+  document.getElementById('today').textContent =
+    today.toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long' });
+
+  document.querySelectorAll('.qcard:not(.optional-note)').forEach(card=>{
+    const q = card.dataset.q;
+    const scale = card.querySelector('.scale');
+    const noteBlock = card.querySelector('.note');
+    const textarea = noteBlock.querySelector('textarea');
+
+    for(let i=1;i<=5;i++){
+      const dot = document.createElement('div');
+      dot.className = 'dot';
+      dot.textContent = i;
+      dot.addEventListener('click', ()=>{
+        answers[q] = i;
+        scale.querySelectorAll('.dot').forEach(d=>{d.classList.remove('selected'); d.classList.remove('low');});
+        dot.classList.add('selected');
+        if(i<=2){
+          dot.classList.add('low');
+          noteBlock.classList.add('open');
+          card.classList.add('needs-comment');
+        } else {
+          noteBlock.classList.remove('open');
+          card.classList.remove('needs-comment');
+          textarea.value = '';
+        }
+        update();
+      });
+      scale.appendChild(dot);
+    }
+
+    textarea.addEventListener('input', ()=>{
+      if(textarea.value.trim().length>0){
+        card.classList.remove('needs-comment');
+      } else if(answers[q]<=2){
+        card.classList.add('needs-comment');
+      }
+      update();
+    });
+  });
+
+  function allValid(){
+    const playerOk = document.getElementById('playername').value !== '';
+    const answered = questions.filter(q=>answers[q]!==undefined);
+    if(answered.length !== questions.length || !playerOk) return false;
+    let commentsOk = true;
+    document.querySelectorAll('.qcard').forEach(card=>{
+      const q = card.dataset.q;
+      const textarea = card.querySelector('textarea');
+      if(answers[q]<=2 && textarea.value.trim().length===0){
+        commentsOk = false;
+      }
+    });
+    return commentsOk;
+  }
+
+  function update(){
+    const answered = questions.filter(q=>answers[q]!==undefined);
+    const n = answered.length;
+    const pct = (n/questions.length)*100;
+    document.getElementById('fill').style.width = pct+'%';
+    document.getElementById('ball').style.left = pct+'%';
+    document.getElementById('progcount').textContent = n+'/'+questions.length;
+
+    const scoreEl = document.getElementById('scoretotal');
+    if(n>0){
+      const sum = answered.reduce((a,q)=>a+answers[q],0);
+      scoreEl.innerHTML = sum + '<sub>/30</sub>';
+    } else {
+      scoreEl.innerHTML = '–<sub>/30</sub>';
+    }
+
+    const btn = document.getElementById('submitbtn');
+    if(allValid()){ btn.classList.add('ready'); }
+    else{ btn.classList.remove('ready'); }
+  }
+
+  document.getElementById('playername').addEventListener('change', update);
+
+  async function submitCheckin(){
+    const btn = document.getElementById('submitbtn');
+    if(!btn.classList.contains('ready')) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+
+    const row = {
+      player_name: document.getElementById('playername').value,
+      checkin_date: new Date().toISOString().slice(0,10),
+      free_comment: document.getElementById('freecomment').value.trim() || null
+    };
+
+    document.querySelectorAll('.qcard:not(.optional-note)').forEach(card=>{
+      const q = card.dataset.q;
+      const col = dbColumns[q];
+      row[col] = answers[q];
+      const textarea = card.querySelector('textarea');
+      row['comment_' + col] = textarea.value.trim() || null;
+    });
+
+    const { error } = await supabaseClient
+      .from('wellness_checkins')
+      .upsert(row, { onConflict: 'player_name,checkin_date' });
+
+    if(error){
+      btn.disabled = false;
+      btn.textContent = 'Submit';
+      alert('Something went wrong sending your wellness check-in. Please try again or tell your coach.');
+      console.error(error);
+      return;
+    }
+
+    document.getElementById('confirm').classList.add('show');
+  }
+
+  document.getElementById('submitbtn').addEventListener('click', submitCheckin);
+</script>
+</body>
+</html>
