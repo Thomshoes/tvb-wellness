@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>TVB · Retour d'entraînement</title>
+<link rel="icon" href="../logo.png">
+<style>
+:root{--navy:#0e1e3d;--blue:#2c56a0;--gold:#c9a66b;--bg:#f3f5f9;--line:#dfe4ee;--txt:#1b2540;--mut:#6b7690;--red:#c94a40;--amber:#e09a2b;--green:#3fae7a}
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--txt)}
+.wrap{max-width:560px;margin:0 auto;padding-bottom:40px}
+.hd{background:var(--navy);color:#fff;padding:18px 18px 16px;position:relative;overflow:hidden;display:flex;align-items:center;gap:12px}
+.hd img{width:46px;height:46px;border-radius:50%;background:#fff1;object-fit:contain}
+.hd small{color:var(--gold);letter-spacing:2px;font-size:10px;font-weight:700;display:block}
+.hd h1{margin:3px 0 0;font-size:21px;letter-spacing:.4px}
+.hd .bar{position:absolute;right:-10px;top:0;bottom:0;width:70px;background:linear-gradient(105deg,transparent 40%,var(--gold) 41%,var(--gold) 47%,var(--blue) 48%)}
+.sec{padding:14px 16px 0}
+.lab{font-size:11px;font-weight:700;color:var(--mut);letter-spacing:1px;margin:0 0 6px}
+.row{display:flex;gap:10px;margin-bottom:14px}
+.row>div{flex:1;min-width:0}
+input[type=date],select,input[type=text],textarea{width:100%;background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;color:var(--txt);appearance:none;-webkit-appearance:none}
+.seg{display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{flex:1;border:0;background:none;padding:11px 0;font-size:14px;font-weight:700;color:var(--mut)}
+.seg button.on{background:var(--navy);color:#fff}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+.chip{padding:8px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--txt)}
+.chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.h2{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--navy);font-size:15px;margin:8px 0 10px}
+.h2 b{background:var(--gold);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ph{display:grid;grid-template-columns:1fr 52px 52px 52px;align-items:center;padding:9px 10px;border-top:1px solid var(--line);font-size:14px}
+.ph.head{background:var(--navy);color:#fff;font-size:9.5px;font-weight:700;text-align:center;border:0;line-height:1.2}
+.ph.head div:first-child{text-align:left}
+.n{font-weight:700}
+.n input{border:0;border-bottom:1px dashed #b9c2d6;border-radius:0;padding:4px 0;font-size:14px;font-weight:700;background:transparent}
+.box{width:26px;height:26px;border-radius:7px;border:2px solid #b9c2d6;margin:auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:900;cursor:pointer;background:#fff}
+.box.g{background:var(--green);border-color:var(--green)}
+.box.b{background:var(--blue);border-color:var(--blue)}
+.box.r{background:var(--amber);border-color:var(--amber)}
+.det{grid-column:1/-1;margin-top:7px;display:none}
+.det.show{display:block}
+.det input{font-size:13.5px;padding:9px 10px;background:#fbfcfe}
+.ph.abs{background:#fbf3f2}
+.ph.abs .n{color:#a7aec0;text-decoration:line-through}
+.abs-tag{grid-column:1/-1;font-size:11px;color:var(--red);font-weight:700;margin-top:3px;display:none}
+.ph.abs .abs-tag{display:block}
+.note{font-size:11.5px;color:var(--mut);padding:8px 2px 0;line-height:1.45}
+textarea{height:80px;resize:vertical;font-size:14px}
+.btn{display:block;width:calc(100% - 32px);margin:18px 16px 0;background:var(--navy);color:#fff;border:0;padding:15px;border-radius:12px;font-weight:800;font-size:15px;letter-spacing:.5px}
+.btn:disabled{opacity:.5}
+.err{color:var(--red);font-size:13px;font-weight:600;margin:10px 16px 0;display:none}
+.ov{position:fixed;inset:0;background:rgba(14,30,61,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.ov.show{display:flex}
+.dlg{background:#fff;border-radius:16px;padding:18px;width:100%;max-width:420px}
+.dlg h3{margin:0 0 6px;color:var(--navy);font-size:18px}
+.dlg p{margin:0 0 12px;color:var(--mut);font-size:13.5px}
+.two{display:flex;gap:8px;margin-top:14px}
+.two button{flex:1;padding:12px;border-radius:10px;font-weight:700;font-size:14.5px}
+.ghost{border:1px solid var(--line);background:#fff;color:var(--txt)}
+.pri{background:var(--navy);color:#fff;border:0}
+.pri:disabled{opacity:.4}
+.done{display:none;margin:20px 16px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+.done h3{margin:0 0 6px;color:var(--navy)}
+.done p{margin:4px 0;color:var(--mut);font-size:14px;line-height:1.5}
+.done button{margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap" id="form">
+  <div class="hd"><div class="bar"></div><img src="../logo.png" alt="" onerror="this.style.display='none'"><div><small>STAFF TECHNIQUE · POST-SÉANCE</small><h1>RETOUR D'ENTRAÎNEMENT</h1></div></div>
+  <div class="sec">
+    <div class="row">
+      <div><div class="lab">DATE</div><input type="date" id="date"></div>
+      <div><div class="lab">CRÉNEAU</div><div class="seg" id="creneau"><button data-v="matin">Matin</button><button data-v="aprem">Aprem</button></div></div>
+    </div>
+    <div class="lab">REMPLI PAR</div>
+    <div class="row"><div><select id="rempli"><option value="">— Choisir —</option></select></div></div>
+    <div class="lab">SÉANCE</div>
+    <div class="chips" id="seance"></div>
+    <input type="text" id="autre" placeholder="Préciser la séance…" style="display:none;margin-bottom:12px">
+
+    <div class="h2"><b>1</b>SUIVI JOUEURS</div>
+    <div class="card" id="players">
+      <div class="ph head"><div>JOUEUR</div><div>RAS</div><div>INDIV /<br>RÉATHLÉ</div><div>À FAIRE<br>REMONTER</div></div>
+    </div>
+    <div class="note">Tout le monde est <b>RAS</b> par défaut. <b>Indiv / Réathlé</b> : contenu réalisé à part du groupe. <b>À faire remonter</b> : douleur, gêne ou info pour le staff médical / la prépa (préciser zone et moment). Aucune case cochée = absent (confirmation à la validation).</div>
+
+    <div class="h2" style="margin-top:18px"><b>2</b>INFOS COMPLÉMENTAIRES</div>
+    <textarea id="infos" placeholder="Facultatif"></textarea>
+  </div>
+  <div class="err" id="err"></div>
+  <button class="btn" id="submit">VALIDER LE RETOUR</button>
+</div>
+
+<div class="done" id="done">
+  <h3 id="doneTitle">✅ Retour enregistré</h3>
+  <p id="doneTxt"></p>
+  <p style="font-size:12px">Pour corriger : refaire le questionnaire avec la même date et le même créneau, il remplace le précédent.</p>
+  <button class="btn" style="width:100%;margin:12px 0 0" onclick="location.reload()">Nouveau retour</button>
+</div>
+
+<div class="ov" id="ov"><div class="dlg">
+  <h3 id="ovTitle"></h3>
+  <p id="ovTxt"></p>
+  <div class="lab">MOTIF</div>
+  <div class="chips" id="motifs"></div>
+  <div class="two"><button class="ghost" id="ovNo">Non, je corrige</button><button class="pri" id="ovYes" disabled>Oui, absent</button></div>
+</div></div>
+
+<script>
+const SB_URL = 'https://tfzigvptuftkfvbvzqgl.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRmemlndnB0dWZ0a2Z2YnZ6cWdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc5NjE2NjgsImV4cCI6MjEwMzUzNzY2OH0.A0zyWtrqlkpvPIToQJ_nRrenTqHX9GwmwhcLTzB3Sqw';
+const STAFF = ['Rubinho','David Sousa','Sousou','Thomas Royer','Moustache','Pierre'];
+const PLAYERS = ['Cardoso','Dias','Folgalvez','Huard','Huetz','Kavogo','Molotkov','Ngapeth','Olsen','Ramon','Roehrig','Santos','Scherer','Urchevich'];
+const SEANCES = ['Volley','Muscu / Physique','Match','Autre'];
+const MOTIFS = ['Blessé','Malade','Sélection','Perso','Autre'];
+const N_EXTRA = 2;
+
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2,'0');
+const now = new Date();
+$('date').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+let creneau = now.getHours() < 13 ? 'matin' : 'aprem';
+let seance = 'Volley';
+
+function paintSeg(){ document.querySelectorAll('#creneau button').forEach(b=>b.classList.toggle('on', b.dataset.v===creneau)); }
+document.querySelectorAll('#creneau button').forEach(b=>b.onclick=()=>{creneau=b.dataset.v;paintSeg();});
+paintSeg();
+
+STAFF.forEach(s=>{ const o=document.createElement('option'); o.value=o.textContent=s; $('rempli').appendChild(o); });
+try{ const last=localStorage.getItem('tvb_rempli_par'); if(last) $('rempli').value=last; }catch(e){}
+
+SEANCES.forEach(s=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=s; c.onclick=()=>{seance=s;paintSeance();}; $('seance').appendChild(c); });
+function paintSeance(){ [...$('seance').children].forEach(c=>c.classList.toggle('on', c.textContent===seance)); $('autre').style.display = seance==='Autre' ? 'block':'none'; }
+paintSeance();
+
+// ---- Joueurs ----
+const state = [];
+function addRow(name, extra){
+  const st = {nom:name, extra, ras:!extra, indiv:false, remonter:false, detail:'', motif:null};
+  state.push(st);
+  const row = document.createElement('div'); row.className='ph';
+  row.innerHTML = `<span class="n">${extra?'<input type="text" placeholder="+ Joueur en plus">':name}</span>
+    <div class="box" data-k="ras"></div><div class="box" data-k="indiv"></div><div class="box" data-k="remonter"></div>
+    <div class="det"><input type="text" placeholder="Détail (contenu, zone, moment)"></div>
+    <div class="abs-tag">Aucune case cochée : absent ?</div>`;
+  st.el = row;
+  row.querySelectorAll('.box').forEach(bx=>bx.onclick=()=>{
+    const k=bx.dataset.k; st[k]=!st[k];
+    if (k==='ras' && st.ras){ st.indiv=false; st.remonter=false; }
+    if (k!=='ras' && st[k]) st.ras=false;
+    paintRow(st);
+  });
+  row.querySelector('.det input').oninput = e => st.detail = e.target.value;
+  if (extra) row.querySelector('.n input').oninput = e => { st.nom = e.target.value.trim(); paintRow(st); };
+  $('players').appendChild(row); paintRow(st);
+}
+function paintRow(st){
+  const b = st.el.querySelectorAll('.box');
+  b[0].className='box'+(st.ras?' g':''); b[0].textContent=st.ras?'✓':'';
+  b[1].className='box'+(st.indiv?' b':''); b[1].textContent=st.indiv?'✓':'';
+  b[2].className='box'+(st.remonter?' r':''); b[2].textContent=st.remonter?'!':'';
+  st.el.querySelector('.det').classList.toggle('show', st.indiv||st.remonter);
+  const none = !st.ras && !st.indiv && !st.remonter;
+  st.el.classList.toggle('abs', none && !st.extra);
+}
+PLAYERS.forEach(p=>addRow(p,false));
+for(let i=0;i<N_EXTRA;i++) addRow('',true);
+
+// ---- Validation ----
+function showErr(m){ $('err').textContent=m; $('err').style.display=m?'block':'none'; }
+let motif=null;
+MOTIFS.forEach(m=>{ const c=document.createElement('span'); c.className='chip'; c.textContent=m; c.onclick=()=>{motif=m;[...$('motifs').children].forEach(x=>x.classList.toggle('on',x.textContent===m));$('ovYes').disabled=false;}; $('motifs').appendChild(c); });
+function askAbsent(st){
+  return new Promise(res=>{
+    motif=null; $('ovYes').disabled=true; [...$('motifs').children].forEach(x=>x.classList.remove('on'));
+    const d=new Date($('date').value+'T12:00:00');
+    $('ovTitle').textContent = `${st.nom} était bien absent ?`;
+    $('ovTxt').textContent = `Aucune case n'est cochée pour lui sur la séance du ${d.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'2-digit'})} ${creneau==='matin'?'matin':'après-midi'}.`;
+    $('ov').classList.add('show');
+    $('ovNo').onclick=()=>{ $('ov').classList.remove('show'); res(false); };
+    $('ovYes').onclick=()=>{ $('ov').classList.remove('show'); res(true); };
+  });
+}
+
+$('submit').onclick = async ()=>{
+  showErr('');
+  if(!$('date').value) return showErr('Indique la date de la séance.');
+  if(!$('rempli').value) return showErr('Indique qui remplit le questionnaire.');
+  if(seance==='Autre' && !$('autre').value.trim()) return showErr('Précise le type de séance.');
+  const noDetail = state.find(s=>s.nom && s.remonter && !s.detail.trim());
+  if(noDetail){ noDetail.el.scrollIntoView({behavior:'smooth',block:'center'}); return showErr(`Précise ce qu'il faut faire remonter pour ${noDetail.nom}.`); }
+  for(const st of state.filter(s=>!s.extra && !s.ras && !s.indiv && !s.remonter)){
+    const ok = await askAbsent(st);
+    if(!ok){ st.el.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+    st.motif = motif;
+  }
+  const players = state.filter(s=>s.nom).map(s=>{
+    const absent = !s.ras && !s.indiv && !s.remonter;
+    if (s.extra && absent) return null;
+    return {nom:s.nom, extra:s.extra, ras:s.ras, indiv:s.indiv, remonter:s.remonter, absent: absent, motif: absent ? s.motif : null, detail: s.detail.trim() || null};
+  }).filter(Boolean);
+  const payload = {session_date:$('date').value, creneau, seance_type:seance, seance_autre: seance==='Autre'?$('autre').value.trim():null,
+    rempli_par:$('rempli').value, infos:$('infos').value.trim(), players};
+  $('submit').disabled=true; $('submit').textContent='ENVOI…';
+  try{
+    const r = await fetch(SB_URL+'/rest/v1/rpc/submit_session_feedback',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({payload})});
+    const j = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(j.message || ('Erreur '+r.status));
+    try{ localStorage.setItem('tvb_rempli_par',$('rempli').value); }catch(e){}
+    const pres = players.filter(p=>!p.extra && !p.absent).length, abs = players.filter(p=>p.absent);
+    const d=new Date(payload.session_date+'T12:00:00');
+    $('doneTitle').textContent = j.updated ? '✅ Retour mis à jour' : '✅ Retour enregistré';
+    $('doneTxt').innerHTML = `${d.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'2-digit'})} · ${creneau==='matin'?'Matin':'Après-midi'} · ${seance==='Autre'?payload.seance_autre:seance}<br>`+
+      `${pres} présents · ${abs.length} absent${abs.length>1?'s':''}${abs.length?' ('+abs.map(a=>a.nom+' – '+(a.motif||'').toLowerCase()).join(', ')+')':''}`+
+      ` · ${players.filter(p=>p.remonter).length} à faire remonter · ${players.filter(p=>p.indiv).length} indiv`;
+    $('form').style.display='none'; $('done').style.display='block'; window.scrollTo(0,0);
+  }catch(e){
+    showErr("Envoi impossible : "+e.message+". Vérifie la connexion et réessaie.");
+    $('submit').disabled=false; $('submit').textContent='VALIDER LE RETOUR';
+  }
+};
+</script>
+</body>
+</html>
