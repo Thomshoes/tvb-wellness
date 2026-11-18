@@ -29,8 +29,8 @@ input[type=date],select,input[type=text],textarea{width:100%;background:#fff;bor
 .h2{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--navy);font-size:15px;margin:8px 0 10px}
 .h2 b{background:var(--gold);color:#fff;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
 .card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.ph{display:grid;grid-template-columns:1fr 52px 52px 52px;align-items:center;padding:9px 10px;border-top:1px solid var(--line);font-size:14px}
-.ph.head{background:var(--navy);color:#fff;font-size:9.5px;font-weight:700;text-align:center;border:0;line-height:1.2}
+.ph{display:grid;grid-template-columns:1fr 46px 46px 46px 46px;align-items:center;padding:9px 10px;border-top:1px solid var(--line);font-size:14px}
+.ph.head{background:var(--navy);color:#fff;font-size:8.5px;font-weight:700;text-align:center;border:0;line-height:1.2}
 .ph.head div:first-child{text-align:left}
 .n{font-weight:700}
 .n input{border:0;border-bottom:1px dashed #b9c2d6;border-radius:0;padding:4px 0;font-size:14px;font-weight:700;background:transparent}
@@ -38,6 +38,7 @@ input[type=date],select,input[type=text],textarea{width:100%;background:#fff;bor
 .box.g{background:var(--green);border-color:var(--green)}
 .box.b{background:var(--blue);border-color:var(--blue)}
 .box.r{background:var(--amber);border-color:var(--amber)}
+.box.p{background:#8a5cb8;border-color:#8a5cb8}
 .det{grid-column:1/-1;margin-top:7px;display:none}
 .det.show{display:block}
 .det input{font-size:13.5px;padding:9px 10px;background:#fbfcfe}
@@ -45,6 +46,7 @@ input[type=date],select,input[type=text],textarea{width:100%;background:#fff;bor
 .ph.abs .n{color:#a7aec0;text-decoration:line-through}
 .abs-tag{grid-column:1/-1;font-size:11px;color:var(--red);font-weight:700;margin-top:3px;display:none}
 .ph.abs .abs-tag{display:block}
+.bl-tag{grid-column:1/-1;font-size:11px;color:#6e4596;font-weight:700;margin-top:3px}
 .note{font-size:11.5px;color:var(--mut);padding:8px 2px 0;line-height:1.45}
 textarea{height:80px;resize:vertical;font-size:14px}
 .btn{display:block;width:calc(100% - 32px);margin:18px 16px 0;background:var(--navy);color:#fff;border:0;padding:15px;border-radius:12px;font-weight:800;font-size:15px;letter-spacing:.5px}
@@ -81,7 +83,7 @@ textarea{height:80px;resize:vertical;font-size:14px}
   #print th{background:#0e1e3d;color:#fff;padding:6px;text-align:left;font-size:9.5px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   #print td{padding:6px;border-bottom:1px solid #dfe4ee;vertical-align:top}
   #print .st{font-weight:800;font-size:10px;padding:2px 7px;border-radius:999px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  #print .s-ras{background:#dff2e7;color:#2b7a55}#print .s-ind{background:#e3ebf8;color:#2c56a0}#print .s-rem{background:#fdf0dc;color:#a8691a}#print .s-abs{background:#fbe4e3;color:#c94a40}
+  #print .s-ras{background:#dff2e7;color:#2b7a55}#print .s-ind{background:#e3ebf8;color:#2c56a0}#print .s-rem{background:#fdf0dc;color:#a8691a}#print .s-abs{background:#fbe4e3;color:#c94a40}#print .s-bl{background:#ece2f5;color:#6e4596}
   #print .sum{margin:10px 0;font-size:12px}
   #print .infos{margin-top:12px;border:1px solid #dfe4ee;border-radius:6px;padding:8px 10px;font-size:11.5px;white-space:pre-wrap}
   #print .foot{margin-top:16px;font-size:9px;color:#6b7690;display:flex;justify-content:space-between;border-top:1px solid #dfe4ee;padding-top:6px}
@@ -104,9 +106,9 @@ textarea{height:80px;resize:vertical;font-size:14px}
 
     <div class="h2"><b>1</b>SUIVI JOUEURS</div>
     <div class="card" id="players">
-      <div class="ph head"><div>JOUEUR</div><div>RAS</div><div>INDIV /<br>RÉATHLÉ</div><div>À FAIRE<br>REMONTER</div></div>
+      <div class="ph head"><div>JOUEUR</div><div>RAS</div><div>INDIV /<br>RÉATHLÉ</div><div>PRÉSENT<br>BLESSÉ</div><div>À FAIRE<br>REMONTER</div></div>
     </div>
-    <div class="note">Tout le monde est <b>RAS</b> par défaut. <b>Indiv / Réathlé</b> : contenu réalisé à part du groupe. <b>À faire remonter</b> : douleur, gêne ou info pour le staff médical / la prépa (préciser zone et moment). Aucune case cochée = absent (confirmation à la validation).</div>
+    <div class="note">Tout le monde est <b>RAS</b> par défaut. <b>Indiv / Réathlé</b> : contenu réalisé à part du groupe. <b>Présent blessé</b> : blessé mais présent à la séance (compté présent). <b>À faire remonter</b> : douleur, gêne ou info pour le staff médical / la prépa (préciser zone et moment). Aucune case cochée = absent (confirmation à la validation).</div>
 
     <div class="h2" style="margin-top:18px"><b>2</b>INFOS COMPLÉMENTAIRES</div>
     <textarea id="infos" placeholder="Facultatif"></textarea>
@@ -140,6 +142,8 @@ const PLAYERS = ['Cardoso','Dias','Folgalvez','Huard','Huetz','Kavogo','Molotkov
 const SEANCES = ['Volley','Muscu / Physique','Match','Autre'];
 const MOTIFS = ['Blessé','Malade','Sélection','Perso','Autre'];
 const N_EXTRA = 2;
+// Blessés en ROUGE dans BDD Blessures : pré-cochés « Présent blessé » (mis à jour avec les dashboards)
+const BLESSES_ROUGE = {Kavogo:'Désinsertion grand rond'};
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2,'0');
@@ -162,17 +166,19 @@ paintSeance();
 // ---- Joueurs ----
 const state = [];
 function addRow(name, extra){
-  const st = {nom:name, extra, ras:!extra, indiv:false, remonter:false, detail:'', motif:null};
+  const bl = !extra && BLESSES_ROUGE[name];
+  const st = {nom:name, extra, ras:!extra && !bl, indiv:false, blesse:!!bl, remonter:false, detail:'', motif:null};
   state.push(st);
   const row = document.createElement('div'); row.className='ph';
   row.innerHTML = `<span class="n">${extra?'<input type="text" placeholder="+ Joueur en plus">':name}</span>
-    <div class="box" data-k="ras"></div><div class="box" data-k="indiv"></div><div class="box" data-k="remonter"></div>
-    <div class="det"><input type="text" placeholder="Détail (contenu, zone, moment)"></div>
+    <div class="box" data-k="ras"></div><div class="box" data-k="indiv"></div><div class="box" data-k="blesse"></div><div class="box" data-k="remonter"></div>
+    <div class="det"><input type="text" placeholder="Commentaire (contenu, zone, moment…)"></div>
+    ${bl ? `<div class="bl-tag">🩹 Blessé (rouge) – ${bl} · pré-coché, à confirmer</div>` : ''}
     <div class="abs-tag">Aucune case cochée : absent ?</div>`;
   st.el = row;
   row.querySelectorAll('.box').forEach(bx=>bx.onclick=()=>{
     const k=bx.dataset.k; st[k]=!st[k];
-    if (k==='ras' && st.ras){ st.indiv=false; st.remonter=false; }
+    if (k==='ras' && st.ras){ st.indiv=false; st.blesse=false; st.remonter=false; }
     if (k!=='ras' && st[k]) st.ras=false;
     paintRow(st);
   });
@@ -184,9 +190,10 @@ function paintRow(st){
   const b = st.el.querySelectorAll('.box');
   b[0].className='box'+(st.ras?' g':''); b[0].textContent=st.ras?'✓':'';
   b[1].className='box'+(st.indiv?' b':''); b[1].textContent=st.indiv?'✓':'';
-  b[2].className='box'+(st.remonter?' r':''); b[2].textContent=st.remonter?'!':'';
-  st.el.querySelector('.det').classList.toggle('show', st.indiv||st.remonter);
-  const none = !st.ras && !st.indiv && !st.remonter;
+  b[2].className='box'+(st.blesse?' p':''); b[2].textContent=st.blesse?'+':'';
+  b[3].className='box'+(st.remonter?' r':''); b[3].textContent=st.remonter?'!':'';
+  st.el.querySelector('.det').classList.toggle('show', st.indiv||st.blesse||st.remonter);
+  const none = !st.ras && !st.indiv && !st.blesse && !st.remonter;
   st.el.classList.toggle('abs', none && !st.extra);
 }
 PLAYERS.forEach(p=>addRow(p,false));
@@ -210,15 +217,15 @@ function askAbsent(st){
 
 function esc(t){ return String(t||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
 function buildPrint(pl, d){
-  const lab = p => p.absent ? ['s-abs','Absent'] : p.remonter ? ['s-rem','À faire remonter'] : p.indiv ? ['s-ind','Indiv / Réathlé'] : ['s-ras','RAS'];
+  const lab = p => p.absent ? ['s-abs','Absent'] : p.remonter ? ['s-rem','À faire remonter'] : p.blesse ? ['s-bl','Présent blessé'] : p.indiv ? ['s-ind','Indiv / Réathlé'] : ['s-ras','RAS'];
   const seanceTxt = pl.seance_type==='Autre' ? pl.seance_autre : pl.seance_type;
   const rows = pl.players.map(p => { const [c,t]=lab(p);
-    const extra = (p.indiv && p.remonter) ? ' + À faire remonter' : '';
+    const extra = [p.remonter && (p.blesse||p.indiv) ? (p.blesse?'Présent blessé':'Indiv / Réathlé') : null, p.blesse && p.indiv && !p.remonter ? 'Indiv / Réathlé' : null].filter(Boolean).map(x=>' + '+x).join('');
     return `<tr><td><b>${esc(p.nom)}</b>${p.extra?' <i>(en plus)</i>':''}</td><td><span class="st ${c}">${t}${extra}</span></td><td>${esc(p.absent ? (p.motif||'') : (p.detail||''))}</td></tr>`; }).join('');
   const n = k => pl.players.filter(k).length;
   $('print').innerHTML = `<div class="ph1"><img src="../logo.png" onerror="this.style.display='none'"><div><small>STAFF TECHNIQUE · POST-SÉANCE</small><h1>RETOUR D'ENTRAÎNEMENT</h1></div></div>
    <div class="meta"><div><b>DATE</b>${d.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'})}</div><div><b>CRÉNEAU</b>${pl.creneau==='matin'?'Matin':'Après-midi'}</div><div><b>SÉANCE</b>${esc(seanceTxt)}</div><div><b>REMPLI PAR</b>${esc(pl.rempli_par)}</div></div>
-   <div class="sum"><b>${n(p=>!p.extra&&!p.absent)}</b> présents · <b>${n(p=>p.absent)}</b> absent(s) · <b>${n(p=>p.remonter)}</b> à faire remonter · <b>${n(p=>p.indiv)}</b> indiv / réathlé</div>
+   <div class="sum"><b>${n(p=>!p.extra&&!p.absent)}</b> présents · <b>${n(p=>p.absent)}</b> absent(s) · <b>${n(p=>p.remonter)}</b> à faire remonter · <b>${n(p=>p.blesse)}</b> présent(s) blessé(s) · <b>${n(p=>p.indiv)}</b> indiv / réathlé</div>
    <table><tr><th style="width:22%">JOUEUR</th><th style="width:26%">STATUT</th><th>DÉTAIL / MOTIF</th></tr>${rows}</table>
    ${pl.infos ? `<div class="infos"><b>Infos complémentaires</b><br>${esc(pl.infos)}</div>` : ''}
    <div class="foot"><span>TOURS VOLLEY-BALL · SAISON 2026-27</span><span>À transmettre au staff médical et à la prépa physique</span></div>`;
@@ -232,15 +239,15 @@ $('submit').onclick = async ()=>{
   if(seance==='Autre' && !$('autre').value.trim()) return showErr('Précise le type de séance.');
   const noDetail = state.find(s=>s.nom && s.remonter && !s.detail.trim());
   if(noDetail){ noDetail.el.scrollIntoView({behavior:'smooth',block:'center'}); return showErr(`Précise ce qu'il faut faire remonter pour ${noDetail.nom}.`); }
-  for(const st of state.filter(s=>!s.extra && !s.ras && !s.indiv && !s.remonter)){
+  for(const st of state.filter(s=>!s.extra && !s.ras && !s.indiv && !s.blesse && !s.remonter)){
     const ok = await askAbsent(st);
     if(!ok){ st.el.scrollIntoView({behavior:'smooth',block:'center'}); return; }
     st.motif = motif;
   }
   const players = state.filter(s=>s.nom).map(s=>{
-    const absent = !s.ras && !s.indiv && !s.remonter;
+    const absent = !s.ras && !s.indiv && !s.blesse && !s.remonter;
     if (s.extra && absent) return null;
-    return {nom:s.nom, extra:s.extra, ras:s.ras, indiv:s.indiv, remonter:s.remonter, absent: absent, motif: absent ? s.motif : null, detail: s.detail.trim() || null};
+    return {nom:s.nom, extra:s.extra, ras:s.ras, indiv:s.indiv, blesse:s.blesse, remonter:s.remonter, absent: absent, motif: absent ? s.motif : null, detail: s.detail.trim() || null};
   }).filter(Boolean);
   const payload = {session_date:$('date').value, creneau, seance_type:seance, seance_autre: seance==='Autre'?$('autre').value.trim():null,
     rempli_par:$('rempli').value, infos:$('infos').value.trim(), players};
@@ -257,7 +264,7 @@ $('submit').onclick = async ()=>{
     $('doneTitle').textContent = j.updated ? '✅ Retour mis à jour' : '✅ Retour enregistré';
     $('doneTxt').innerHTML = `${d.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'2-digit'})} · ${creneau==='matin'?'Matin':'Après-midi'} · ${seance==='Autre'?payload.seance_autre:seance}<br>`+
       `${pres} présents · ${abs.length} absent${abs.length>1?'s':''}${abs.length?' ('+abs.map(a=>a.nom+' – '+(a.motif||'').toLowerCase()).join(', ')+')':''}`+
-      ` · ${players.filter(p=>p.remonter).length} à faire remonter · ${players.filter(p=>p.indiv).length} indiv`;
+      ` · ${players.filter(p=>p.blesse).length} blessé${players.filter(p=>p.blesse).length>1?'s':''} présent${players.filter(p=>p.blesse).length>1?'s':''} · ${players.filter(p=>p.remonter).length} à faire remonter · ${players.filter(p=>p.indiv).length} indiv`;
     buildPrint(payload, d);
     $('form').style.display='none'; $('done').style.display='block'; window.scrollTo(0,0);
   }catch(e){
